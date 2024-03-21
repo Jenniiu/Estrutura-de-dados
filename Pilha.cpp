@@ -5,47 +5,54 @@ struct Pilha
 {
   static constexpr int tam_v = 5;
   char v[tam_v];
-  int t; // topo da pilha
+  int t;
 };
-// inicia a pilha
-void inicializar(Pilha &P)
+
+// inicializar a pilha
+void
+inicializar(Pilha &P)
 {
   P.t = -1;
 }
-// se vazia
-bool vazia (Pilha &P){
+
+// vazia
+bool vazia(Pilha &P)
+{
   return (P.t == -1);
 }
-//se cheia
+
+// cheia
 bool cheia(Pilha &P)
 {
-  if (P.t == -1)
-    return false;
+  if(vazia(P)) return false;
   return (P.t + 1 == P.tam_v);
 }
-// empilha
-bool empilha(Pilha &P, char c)
+
+//empilhar
+bool empilhar (Pilha &P, char c)
 {
-  if (cheia(P))
-    return false;
-  else
-    ++P.t;
-  P.v[P.t] = c;
-  return true;
+  if(cheia(P)) return false;
+  else{
+    P.t++; //incrementa o topo
+    P.v[P.t] = c; //c ocupa o topo
+    return true;
+  }
 }
 
-char topo(Pilha &P)
+//topo
+char topo (Pilha &P)
 {
   return P.v[P.t];
 }
-// desempilha
-bool desempilha(Pilha &P)
+
+//desempilhar
+bool desempilhar (Pilha &P)
 {
-  if (P.t == -1)
-    return false;
-  else
-    --P.t; // o topo, que foi colocao por ultimo não é mais o ultimo
-  return true;
+  if(vazia(P)) return false;
+  else{
+    P.t--;
+    return true; //sempre lembrar de retornar true
+  }
 }
 
 int main()
@@ -53,48 +60,34 @@ int main()
   Pilha P;
   inicializar(P);
 
-  for (;;)
+  for(;;) //loop até break
   {
-    cout << "Operações (Empilhar, Desempilhar, Topo, Sair): ";
+    cout << "Escolha: Inserir, Conferir, Remover, Sair\n";
     char opcao;
     cin >> opcao;
 
-    if (opcao == 'E')
+    if(opcao == 'I')
     {
-      cout << "Elemento a ser empilhado: \n";
+      cout << "Digite o elemento:\n";
       char elemento;
       cin >> elemento;
-      if (empilha(P, elemento))
-        cout << "Empilhado!\n";
-      else
-        "Cheia!\n";
+
+      if(empilhar(P,elemento)) cout << "Inserido!\n";
+      else cout << "Cheia!\n";
     }
-    else if (opcao == 'D')
+
+    else if(opcao == 'C')
     {
-      if (vazia(P))
-        cout << "Inviável, vazia!\n";
-      else
-      {
-        cout << "Desenfilando: "
-             << topo(P)
-             << '\n';
-        desempilha(P);
-      }
+      if(vazia(P)) cout << "Vazia!\n";
+      cout << "Elemento no topo:\n" << topo(P) << '\n';
     }
-    else if (opcao == 'T')
+
+    else if(opcao == 'D')
     {
-      if (vazia(P))
-        cout << "Inviável, vazia!\n";
-      else
-      {
-        cout << "Topo: " << topo(P) << '\n';
-      }
+      if(desempilhar(P)) cout << "Removido!\n";
+      else cout << "Vazia!\n";
     }
-    else if (opcao == 'S')
-      break;
-    else
-    {
-      cout << "Opcao invalida!\n";
-    }
+    else if (opcao == 'S') break;
+    else cout << "Opcao invalida!\n";
   }
 }
