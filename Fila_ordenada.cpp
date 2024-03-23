@@ -1,65 +1,92 @@
-//Fila
 #include <iostream>
 using namespace std;
 
 struct Fila
 {
-  // cria um vetor e 5 posições
   static constexpr int tam_v = 5;
+  int p, n = 0;
   char v[tam_v];
-  int p, u; // para o início e fim da fila
 };
-// inicializa a fila
+
 void inicializar(Fila &F)
 {
   F.p = -1;
 }
-// ver se está vazia
+
 bool vazia(Fila &F)
 {
   return (F.p == -1);
 }
-// ver se está cheia
+
 bool cheia(Fila &F)
 {
   if (F.p == -1) return false;
-  return (F.u + 1) % F.tam_v == F.p; // verifica circularidade
+  return (F.n + 1) % F.tam_v == F.p;
 }
-// enfilar fila
-bool enfilar(Fila &F, char c)
+
+void deslocarDireita(Fila &F, int pos)
 {
-  if (cheia(F)) return false; // chama a função cheia
+  for (int i = F.n; i >= pos; i--)
+  {
+    F.v[(i + 1) % F.tam_v] = F.v[i % F.tam_v];
+  }
+}
+
+void enfilarOrdenado(Fila &F, char c)
+{
+  if (cheia(F))
+  {
+    cout << "Cheia!\n";
+    return;
+  }
+
   if (F.p == -1)
-  { // verifica se vazia
-    F.p = F.p = 0;
+  {
+    F.p = F.n = 0;
   }
   else
   {
-    if (F.u == F.tam_v - 1)
-      F.u = 0; // verifica se no final
-    else
-      ++F.u; // se não só adicioa
+    int pos = 0;
+    while (pos < F.n && F.v[pos] < c)
+    {
+      pos++;
+    }
+
+    deslocarDireita(F, pos);
+
+    F.n = (F.n + 1) % F.tam_v;
+    F.v[pos] = c;
   }
-  F.v[F.u] = c; // comum para todos os casos;
-  return true;
 }
+
 char primeiro(Fila &F)
 {
   return F.v[F.p];
 }
-//desnfila
-bool desenfila (Fila &F){
-  if (F.p == -1) return false;
-  if (F.u == F.p) F.p = -1;
-  //incrementa F.p em 1 e se passa do fim da fila volta pro inicio
-  else            F.p = (F.p + 1) % F.tam_v;
-  //retorna true se der certo
-  return true;
+
+void desenfila(Fila &F)
+{
+  if (F.p == -1)
+  {
+    cout << "Inviável, vazia!\n";
+    return;
+  }
+
+  if (F.n == F.p)
+    F.p = -1;
+  else
+    F.p = (F.p + 1) % F.tam_v;
+
+  F.n--;
 }
-int main (){
+
+int main()
+{
   Fila F;
   inicializar(F);
-  for(;;){
+
+  for (;;)
+  {
     cout << "Operacao (Enfilar, Desenfilar, Primeiro, Sair): ";
     char opcao;
     cin >> opcao;
@@ -69,28 +96,34 @@ int main (){
       cout << "Elemento a inserir: ";
       char elemento;
       cin >> elemento;
-      if (enfilar(F, elemento)) cout << "Enfilado.\n";
-      else                      cout << "Cheia!\n";
+      enfilarOrdenado(F, elemento);
+      cout << "Enfilado.\n";
     }
     else if (opcao == 'D')
     {
-      if(vazia(F)) cout << "Inviavel, vazia.\n"; //se retornar verdadeiro
-      else{
+      if (vazia(F))
+        cout << "Inviável, vazia.\n";
+      else
+      {
         cout << "Vai ser desenfilado: "
-        << primeiro (F)
-        << '\n';
+             << primeiro(F)
+             << '\n';
         desenfila(F);
       }
     }
-    else if (opcao == 'P'){
-      if (vazia(F)) cout << "Inviável, vazia!\n";
+    else if (opcao == 'P')
+    {
+      if (vazia(F))
+        cout << "Inviável, vazia!\n";
       else
       {
         cout << "Primeiro: " << primeiro(F) << '\n';
       }
     }
-    else if (opcao == 'S') break;
-    else{
+    else if (opcao == 'S')
+      break;
+    else
+    {
       cout << "Opcao invalida!\n";
     }
   }
