@@ -73,27 +73,25 @@ int main()
     }
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
 int remover_ocorrencias(double *v, int n, double x)
 {
 
-    int i = 0;
+    int novo = 0; 
 
-    while (i < n)
-    { // percorre as posições
-        if (v[i] == x)
+    for (int i = 0; i < n; i++)
+    {
+        if (v[i] != x)
         {
-            for (int j = i; j < n; j++)
-            {                    // vai do elemento a ser tirado ao fim do vetor
-                v[j] = v[j + 1]; // move os valores para a esquerda
-            }
-            n--; // diminui as posições
+            v[novo] = v[i]; 
+            novo++;
         }
-        i++; // adiciona posições
     }
-    return n; // retorna o valor atualizado do número de posições
+
+    return novo; 
 }
 
 int main()
@@ -131,3 +129,4 @@ int main()
         }
     }
 }
+*/
